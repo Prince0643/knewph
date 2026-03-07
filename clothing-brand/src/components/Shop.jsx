@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
+const SIZES = ['M', 'L', 'XL'];
+
 const Shop = () => {
   const { addToCart } = useCart();
+  const [selectedSizes, setSelectedSizes] = useState({});
   const products = [
     {
       id: 1,
@@ -58,6 +61,32 @@ const Shop = () => {
     setShowBack(prev => !prev);
   };
 
+  const handleSizeSelect = (productId, size) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
+  };
+
+  const handleAddToCart = (product) => {
+    const size = selectedSizes[product.id];
+    if (!size && !product.comingSoon) {
+      alert('Please select a size first');
+      return;
+    }
+    addToCart({ ...product, size });
+  };
+
+  const handleBuyNow = (product) => {
+    const size = selectedSizes[product.id];
+    if (!size && !product.comingSoon) {
+      alert('Please select a size first');
+      return;
+    }
+    addToCart({ ...product, size });
+    setTimeout(() => {
+      const cartButton = document.querySelector('[data-cart-trigger]');
+      if (cartButton) cartButton.click();
+    }, 100);
+  };
+
   return (
     <section id="shop" style={{ backgroundColor: '#1a1a1a', padding: '80px 16px' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -98,9 +127,34 @@ const Shop = () => {
                 </p>
               </div>
 
+              {/* Size Selection */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '16px', marginBottom: '12px' }}>
+                {SIZES.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => !product.comingSoon && handleSizeSelect(product.id, size)}
+                    disabled={product.comingSoon}
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      border: `2px solid ${selectedSizes[product.id] === size ? '#ffffff' : '#ffffff40'}`,
+                      backgroundColor: selectedSizes[product.id] === size ? '#ffffff' : 'transparent',
+                      color: selectedSizes[product.id] === size ? '#000000' : '#ffffff',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      cursor: product.comingSoon ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.3s ease',
+                      opacity: product.comingSoon ? 0.3 : 1,
+                    }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+
               {/* Add to Cart Button */}
               <button
-                onClick={() => addToCart(product)}
+                onClick={() => handleAddToCart(product)}
                 disabled={product.comingSoon}
                 className="w-full mt-4 py-3 border-2 border-white text-white font-semibold text-sm tracking-wide transition-all duration-300 hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ padding: '12px 0' }}
@@ -109,13 +163,7 @@ const Shop = () => {
               </button>
               {/* Buy Now Button */}
               <button
-                onClick={() => {
-                  addToCart(product);
-                  setTimeout(() => {
-                    const cartButton = document.querySelector('[data-cart-trigger]');
-                    if (cartButton) cartButton.click();
-                  }, 100);
-                }}
+                onClick={() => handleBuyNow(product)}
                 disabled={product.comingSoon}
                 className="w-full mt-2 py-3 bg-white text-black font-semibold text-sm tracking-wide transition-all duration-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ padding: '12px 0' }}

@@ -40,6 +40,7 @@ const Cart = () => {
       products: cartItems.map(item => ({
         name: item.name,
         color: item.color,
+        size: item.size,
         quantity: item.quantity,
         price: item.price,
         subtotal: item.price * item.quantity
@@ -160,7 +161,7 @@ const Cart = () => {
           ) : (
             cartItems.map((item) => (
               <div
-                key={`${item.id}-${item.color}`}
+                key={`${item.id}-${item.color}-${item.size}`}
                 style={{
                   display: 'flex',
                   gap: '16px',
@@ -187,8 +188,8 @@ const Cart = () => {
                   <h3 style={{ color: '#ffffff', fontSize: '16px', fontWeight: 'bold' }}>
                     {item.name}
                   </h3>
-                  <p style={{ color: '#ffffff60', fontSize: '14px', marginBottom: '8px' }}>
-                    {item.color}
+                  <p style={{ color: '#ffffff60', fontSize: '14px', marginBottom: '4px' }}>
+                    {item.color} | Size: {item.size}
                   </p>
                   <p style={{ color: '#ffffff', fontSize: '16px', fontWeight: 'bold' }}>
                     ₱{item.price.toLocaleString()}
@@ -197,7 +198,7 @@ const Cart = () => {
                   {/* Quantity Controls */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '12px' }}>
                     <button
-                      onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity - 1)}
                       style={{
                         width: '32px',
                         height: '32px',
@@ -214,7 +215,7 @@ const Cart = () => {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.id, item.color, item.size, item.quantity + 1)}
                       style={{
                         width: '32px',
                         height: '32px',
@@ -232,7 +233,7 @@ const Cart = () => {
 
                 {/* Remove Button */}
                 <button
-                  onClick={() => removeFromCart(item.id, item.color)}
+                  onClick={() => removeFromCart(item.id, item.color, item.size)}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -351,7 +352,7 @@ const Cart = () => {
               </h3>
               {cartItems.map((item) => (
                 <div
-                  key={`checkout-${item.id}-${item.color}`}
+                  key={`checkout-${item.id}-${item.color}-${item.size}`}
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -360,7 +361,7 @@ const Cart = () => {
                   }}
                 >
                   <span style={{ color: '#666666' }}>
-                    {item.name} ({item.color}) x{item.quantity}
+                    {item.name} ({item.color}, Size {item.size}) x{item.quantity}
                   </span>
                   <span style={{ color: '#1a1a1a' }}>
                     ₱{(item.price * item.quantity).toLocaleString()}

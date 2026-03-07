@@ -9,11 +9,11 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product) => {
     setCartItems((prev) => {
       const existingItem = prev.find(
-        (item) => item.id === product.id && item.color === product.color
+        (item) => item.id === product.id && item.color === product.color && item.size === product.size
       );
       if (existingItem) {
         return prev.map((item) =>
-          item.id === product.id && item.color === product.color
+          item.id === product.id && item.color === product.color && item.size === product.size
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
@@ -23,20 +23,20 @@ export const CartProvider = ({ children }) => {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId, color) => {
+  const removeFromCart = (productId, color, size) => {
     setCartItems((prev) =>
-      prev.filter((item) => !(item.id === productId && item.color === color))
+      prev.filter((item) => !(item.id === productId && item.color === color && item.size === size))
     );
   };
 
-  const updateQuantity = (productId, color, quantity) => {
+  const updateQuantity = (productId, color, size, quantity) => {
     if (quantity < 1) {
-      removeFromCart(productId, color);
+      removeFromCart(productId, color, size);
       return;
     }
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === productId && item.color === color
+        item.id === productId && item.color === color && item.size === size
           ? { ...item, quantity }
           : item
       )
