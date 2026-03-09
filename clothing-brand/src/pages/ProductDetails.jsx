@@ -22,6 +22,12 @@ const collectionImages = [
 
 const SIZES = ['M', 'L', 'XL'];
 
+// Sold out variants: color + size combinations
+const SOLD_OUT = [
+  { color: 'Black', size: 'M' },
+  { color: 'White', size: 'L' },
+];
+
 const ProductDetails = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
@@ -109,6 +115,13 @@ const ProductDetails = () => {
       alert('Please select a size first');
       return;
     }
+    const isSoldOut = SOLD_OUT.some(
+      item => item.color === selectedColor && item.size === selectedSize
+    );
+    if (isSoldOut) {
+      alert('Sorry, this item is sold out');
+      return;
+    }
     addToCart({
       id: selectedColor === 'White' ? 1 : 2,
       name: product.name,
@@ -123,6 +136,13 @@ const ProductDetails = () => {
   const handleBuyNow = () => {
     if (!selectedSize) {
       alert('Please select a size first');
+      return;
+    }
+    const isSoldOut = SOLD_OUT.some(
+      item => item.color === selectedColor && item.size === selectedSize
+    );
+    if (isSoldOut) {
+      alert('Sorry, this item is sold out');
       return;
     }
     addToCart({
@@ -354,25 +374,48 @@ const ProductDetails = () => {
                 Size
               </p>
               <div style={{ display: 'flex', gap: '12px' }}>
-                {SIZES.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    style={{
-                      width: '56px',
-                      height: '48px',
-                      border: `2px solid ${selectedSize === size ? '#ffffff' : '#ffffff40'}`,
-                      backgroundColor: selectedSize === size ? '#ffffff' : 'transparent',
-                      color: selectedSize === size ? '#000000' : '#ffffff',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {SIZES.map((size) => {
+                  const isSoldOut = SOLD_OUT.some(
+                    item => item.color === selectedColor && item.size === size
+                  );
+                  return (
+                    <button
+                      key={size}
+                      onClick={() => !isSoldOut && setSelectedSize(size)}
+                      disabled={isSoldOut}
+                      style={{
+                        width: '56px',
+                        height: '48px',
+                        border: `2px solid ${selectedSize === size ? '#ffffff' : isSoldOut ? '#ffffff20' : '#ffffff40'}`,
+                        backgroundColor: selectedSize === size ? '#ffffff' : 'transparent',
+                        color: selectedSize === size ? '#000000' : isSoldOut ? '#ffffff30' : '#ffffff',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        cursor: isSoldOut ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.3s ease',
+                        position: 'relative',
+                        textDecoration: isSoldOut ? 'line-through' : 'none',
+                      }}
+                    >
+                      {size}
+                      {isSoldOut && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            bottom: '2px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            fontSize: '8px',
+                            fontWeight: '500',
+                            textDecoration: 'none',
+                          }}
+                        >
+                          SOLD
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
               {/* Size Chart Button */}
               <button
