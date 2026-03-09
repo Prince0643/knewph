@@ -88,8 +88,8 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Cart & Mobile Menu Button - Absolute Right */}
-          <div className="flex items-center gap-x-2" style={{ position: 'absolute', right: '0' }}>
+          {/* Cart & Search Icons - Absolute Right at edge */}
+          <div className="flex items-center gap-x-2" style={{ position: 'absolute', right: '-64px' }}>
             {/* Cart Icon */}
             <button 
               onClick={openCart}
