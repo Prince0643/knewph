@@ -145,7 +145,7 @@ const Navbar = () => {
                     placeholder="Search products..."
                     autoFocus
                     style={{
-                      width: '200px',
+                      width: '140px',
                       height: '36px',
                       padding: '8px 12px',
                       borderRadius: '8px',
@@ -155,6 +155,7 @@ const Navbar = () => {
                       fontSize: '14px',
                       outline: 'none',
                     }}
+                    className="sm:w-[200px]"
                   />
                   <button
                     onClick={() => {
@@ -202,13 +203,14 @@ const Navbar = () => {
                     position: 'absolute',
                     top: '44px',
                     right: 0,
-                    width: '240px',
+                    width: '180px',
                     backgroundColor: '#1a1a1a',
                     border: '1px solid #ffffff30',
                     borderRadius: '8px',
                     overflow: 'hidden',
                     zIndex: 50,
                   }}
+                  className="sm:w-[240px]"
                 >
                   {filteredProducts.map((product) => (
                     <button

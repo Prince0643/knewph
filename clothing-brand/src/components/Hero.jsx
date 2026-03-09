@@ -115,7 +115,7 @@ const Hero = () => {
             className="w-48 md:w-64 lg:w-80"
             style={{ paddingBottom: '28px', filter: 'brightness(0) invert(1)' }}
           />
-          <p className="text-xl md:text-2xl text-white/90 max-w-2xl hidden md:block" style={{ paddingBottom: '32px' }}>
+          <p className="text-xl md:text-2xl text-white/90 max-w-2xl" style={{ paddingBottom: '32px' , paddingLeft: '40px', paddingRight: '40px'}}>
             Designed for those who craft their own path.
           </p>
           <div className="flex flex-col sm:flex-row gap-8">
