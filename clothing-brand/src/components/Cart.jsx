@@ -15,6 +15,7 @@ const Cart = () => {
 
   const [showCheckout, setShowCheckout] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [orderData, setOrderData] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -33,6 +34,7 @@ const Cart = () => {
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     
     const orderSummary = {
       orderId: 'ORD-' + Date.now(),
@@ -51,16 +53,16 @@ const Cart = () => {
     };
     
     try {
-      // Send data to webhook
-      await fetch('https://hook.eu1.make.com/3km4koxm0hmok9gkijy921fykk1iiu4u', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderSummary),
+      // Send data to Google Apps Script using GET to avoid CORS
+      const params = new URLSearchParams({
+        data: JSON.stringify(orderSummary)
       });
       
-      console.log('Order placed and sent to webhook:', orderSummary);
+      await fetch(`${import.meta.env.VITE_APPSCRIPT_URL}?${params.toString()}`, {
+        mode: 'no-cors'
+      });
+      
+      console.log('Order placed and sent to Google Sheets:', orderSummary);
       
       // Show thank you page
       setOrderData(orderSummary);
@@ -70,6 +72,8 @@ const Cart = () => {
     } catch (error) {
       console.error('Error sending order:', error);
       alert('There was an error placing your order. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,6 +93,12 @@ const Cart = () => {
 
   return (
     <>
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
       {/* Backdrop */}
       <div
         style={{
@@ -324,6 +334,39 @@ const Cart = () => {
               position: 'relative',
             }}
           >
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 10,
+                  borderRadius: '16px',
+                }}
+              >
+                <div
+                  style={{
+                    width: '48px',
+                    height: '48px',
+                    border: '4px solid #f5f5f5',
+                    borderTop: '4px solid #1a1a1a',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite',
+                  }}
+                />
+                <p style={{ marginTop: '16px', color: '#1a1a1a', fontSize: '14px', fontWeight: '500' }}>
+                  Processing order...
+                </p>
+              </div>
+            )}
             {/* Close Button */}
             <button
               onClick={closeCheckout}
@@ -501,19 +544,21 @@ const Cart = () => {
               {/* Place Order Button */}
               <button
                 type="submit"
+                disabled={isLoading}
                 style={{
                   width: '100%',
                   padding: '16px',
-                  backgroundColor: '#1a1a1a',
+                  backgroundColor: isLoading ? '#666666' : '#1a1a1a',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '8px',
                   fontSize: '16px',
                   fontWeight: 'bold',
-                  cursor: 'pointer',
+                  cursor: isLoading ? 'not-allowed' : 'pointer',
+                  opacity: isLoading ? 0.7 : 1,
                 }}
               >
-                PLACE ORDER
+                {isLoading ? 'PROCESSING...' : 'PLACE ORDER'}
               </button>
             </form>
           </div>
