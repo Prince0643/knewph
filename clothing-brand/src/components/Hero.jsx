@@ -116,22 +116,15 @@ const Hero = () => {
             style={{ paddingBottom: '28px', filter: 'brightness(0) invert(1)' }}
           />
           <p className="text-xl md:text-2xl text-white/90 max-w-2xl hidden md:block" style={{ paddingBottom: '32px' }}>
-            Premium workwear meets streetwear. Designed for those who craft their own path.
+            Designed for those who craft their own path.
           </p>
           <div className="flex flex-col sm:flex-row gap-8">
             <button 
               onClick={() => scrollToSection('shop')}
-              className="bg-white text-black font-semibold text-base tracking-wide hover:bg-gray-100 transition-colors" 
-              style={{ padding: '10px 10px' }}
-            >
-              SHOP NOW
-            </button>
-            <button 
-              onClick={() => scrollToSection('collections')}
               className="border-2 border-white text-white font-semibold text-base tracking-wide hover:bg-white hover:text-black transition-colors" 
               style={{ padding: '10px 10px' }}
             >
-              VIEW COLLECTION
+              SHOP NOW
             </button>
           </div>
         </div>

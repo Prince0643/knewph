@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const SIZES = ['M', 'L', 'XL'];
 
 const Shop = () => {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const [selectedSizes, setSelectedSizes] = useState({});
+  const [hoveredProduct, setHoveredProduct] = useState(null);
   const products = [
     {
       id: 1,
@@ -42,24 +45,6 @@ const Shop = () => {
       backImage: '/images/against_all_odds_black/Against all odds Back (Black).png',
     },
   ];
-
-  const [hoveredProduct, setHoveredProduct] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showBack, setShowBack] = useState(false);
-
-  const openModal = (product) => {
-    setSelectedProduct(product);
-    setShowBack(false);
-  };
-
-  const closeModal = () => {
-    setSelectedProduct(null);
-    setShowBack(false);
-  };
-
-  const toggleImage = () => {
-    setShowBack(prev => !prev);
-  };
 
   const handleSizeSelect = (productId, size) => {
     setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
@@ -101,16 +86,28 @@ const Shop = () => {
               {/* Product Image Container */}
               <div 
                 className="relative bg-brand-gray rounded-lg overflow-hidden aspect-square mb-4"
-                onClick={() => openModal(product)}
                 onMouseEnter={() => setHoveredProduct(product.id)}
                 onMouseLeave={() => setHoveredProduct(null)}
-                style={{ borderRadius: '12px', cursor: 'pointer' }}
+                onClick={() => product.name === 'The Classic' && navigate('/product/the-classic')}
+                style={{ borderRadius: '12px', cursor: product.name === 'The Classic' ? 'pointer' : 'default' }}
               >
+                {/* Front Image */}
                 <img
                   src={product.frontImage}
                   alt={`${product.name} ${product.color} Front`}
                   className="absolute inset-0 w-full h-full object-contain p-4 transition-all duration-300"
                   style={{ 
+                    opacity: hoveredProduct === product.id ? 0 : 1,
+                    transform: hoveredProduct === product.id ? 'scale(1.1)' : 'scale(1)'
+                  }}
+                />
+                {/* Back Image */}
+                <img
+                  src={product.backImage}
+                  alt={`${product.name} ${product.color} Back`}
+                  className="absolute inset-0 w-full h-full object-contain p-4 transition-all duration-300"
+                  style={{ 
+                    opacity: hoveredProduct === product.id ? 1 : 0,
                     transform: hoveredProduct === product.id ? 'scale(1.1)' : 'scale(1)'
                   }}
                 />
@@ -174,124 +171,7 @@ const Shop = () => {
           ))}
         </div>
 
-        {/* Size Chart */}
-        <div style={{ textAlign: 'center', marginTop: '64px' }}>
-          <img 
-            src="/images/The Classic Size chart.png" 
-            alt="Size Chart" 
-            style={{ maxWidth: '100%', height: 'auto', borderRadius: '16px' }}
-          />
-        </div>
       </div>
-
-      {/* Product Modal */}
-      {selectedProduct && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.95)',
-            zIndex: 100,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
-          onClick={closeModal}
-        >
-          {/* Close Button */}
-          <button
-            onClick={closeModal}
-            style={{
-              position: 'fixed',
-              top: '24px',
-              right: '24px',
-              background: 'none',
-              border: 'none',
-              color: '#ffffff',
-              fontSize: '32px',
-              cursor: 'pointer',
-              padding: '8px',
-              zIndex: 101
-            }}
-          >
-            ✕
-          </button>
-
-          {/* Image Container */}
-          <div 
-            style={{ 
-              position: 'relative',
-              width: '100%',
-              maxWidth: '600px',
-              height: '75vh',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleImage();
-            }}
-          >
-            {/* Front Image */}
-            <img 
-              src={selectedProduct.frontImage} 
-              alt="Front" 
-              style={{ 
-                position: 'absolute',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'contain',
-                opacity: showBack ? 0 : 1,
-                transition: 'opacity 0.3s ease'
-              }}
-            />
-            {/* Back Image */}
-            <img 
-              src={selectedProduct.backImage} 
-              alt="Back" 
-              style={{ 
-                position: 'absolute',
-                maxWidth: '100%',
-                maxHeight: '100%',
-                objectFit: 'contain',
-                opacity: showBack ? 1 : 0,
-                transition: 'opacity 0.3s ease'
-              }}
-            />
-          </div>
-
-          {/* Toggle Indicators */}
-          <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
-            <div 
-              style={{ 
-                width: '12px', 
-                height: '12px', 
-                borderRadius: '50%', 
-                backgroundColor: showBack ? '#ffffff40' : '#ffffff'
-              }}
-            />
-            <div 
-              style={{ 
-                width: '12px', 
-                height: '12px', 
-                borderRadius: '50%', 
-                backgroundColor: showBack ? '#ffffff' : '#ffffff40'
-              }}
-            />
-          </div>
-
-          {/* Tap Hint */}
-          <p style={{ color: '#ffffff60', marginTop: '16px', fontSize: '14px' }}>
-            Tap to toggle
-          </p>
-        </div>
-      )}
     </section>
   );
 };

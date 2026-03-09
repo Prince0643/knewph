@@ -12,7 +12,7 @@ const Footer = () => {
               style={{ height: '32px', width: 'auto', filter: 'brightness(0) invert(1)', marginBottom: '16px' }}
             />
             <p style={{ color: '#ffffff60', fontSize: '14px', lineHeight: '1.6' }}>
-              Premium workwear meets streetwear. Designed for those who craft their own path.
+              Designed for those who craft their own path.
             </p>
           </div>
 
