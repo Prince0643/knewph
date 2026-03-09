@@ -22,7 +22,7 @@ const Footer = () => {
               CONTACT
             </h4>
             <p style={{ color: '#ffffff60', fontSize: '14px', marginBottom: '8px' }}>
-              hello@knew.ph
+              knew.beyondordinary@gmail.com
             </p>
             <p style={{ color: '#ffffff60', fontSize: '14px' }}>
               Bauang, Philippines, 2501
