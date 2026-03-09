@@ -349,7 +349,7 @@ const ProductDetails = () => {
             </div>
 
             {/* Size Selection */}
-            <div style={{ marginBottom: '32px' }}>
+            <div style={{ marginBottom: '24px' }}>
               <p style={{ fontSize: '14px', fontWeight: '600', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 Size
               </p>
@@ -374,6 +374,32 @@ const ProductDetails = () => {
                   </button>
                 ))}
               </div>
+              {/* Size Chart Button */}
+              <button
+                onClick={() => setSelectedCollectionImage('/images/The Classic Size chart.png')}
+                style={{
+                  marginTop: '16px',
+                  padding: '4px 16px',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #ffffff',
+                  color: '#000000',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  borderRadius: '6px',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#e0e0e0';
+                  e.target.style.borderColor = '#e0e0e0';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = '#ffffff';
+                  e.target.style.borderColor = '#ffffff';
+                }}
+              >
+                View Size Chart
+              </button>
             </div>
 
             {/* Action Buttons */}
